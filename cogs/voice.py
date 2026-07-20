@@ -102,7 +102,7 @@ class VoiceKeepAlive(commands.Cog):
             return
 
         vc = member.guild.voice_client
-        if vc is None:
+        if vc is None or vc.channel is None:
             return
 
         if len(vc.channel.members) == 1 and vc.channel.members[0].bot:
