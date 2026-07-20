@@ -44,7 +44,8 @@ class Help(commands.Cog):
                 f"`{self.prefix}dns <domain>` - DNS sorgusu\n"
                 f"`{self.prefix}email <email>` - Email analizi\n"
                 f"`{self.prefix}github <kullanici>` - GitHub profili\n"
-                f"`{self.prefix}subdomain <domain>` - Subdomain bul"
+                f"`{self.prefix}subdomain <domain>` - Subdomain bul\n"
+                f"`{self.prefix}telefonbilgi <numara>` - Telefon numarasi analizi"
             ),
             inline=False,
         )
