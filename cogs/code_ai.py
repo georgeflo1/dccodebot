@@ -4,9 +4,7 @@ from discord.ext import commands
 from groq import Groq
 
 
-GROQ_KEY = os.getenv("GROQ_API_KEY")
-
-SYSTEM_PROMPT = None
+GROQ_KEY = os.getenv("GROQ_API_KEY") or os.getenv("groq_api_key")
 
 
 def handle_api_error(e):
