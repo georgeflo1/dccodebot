@@ -25,7 +25,7 @@ class VoiceKeepAlive(commands.Cog):
                         await channel.connect()
                     except Exception:
                         pass
-            elif vc.channel.id != self.target_channel_id:
+            elif vc.channel is None or vc.channel.id != self.target_channel_id:
                 channel = self.bot.get_channel(self.target_channel_id)
                 if channel:
                     try:
@@ -83,7 +83,7 @@ class VoiceKeepAlive(commands.Cog):
 
     @commands.command(name="seshatirlat", aliases=["voiceping", "sesbilgi"])
     async def seshatirlat(self, ctx):
-        if ctx.voice_client:
+        if ctx.voice_client and ctx.voice_client.channel:
             kanal = ctx.voice_client.channel
             embed = discord.Embed(
                 title="Ses Durumu",
