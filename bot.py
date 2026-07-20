@@ -28,6 +28,7 @@ INITIAL_EXTENSIONS = [
     "cogs.code_utils",
     "cogs.tools",
     "cogs.osint",
+    "cogs.voice",
 ]
 
 CREATOR_ID = 1083108476882006026
