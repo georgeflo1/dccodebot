@@ -18,7 +18,7 @@ class VoiceKeepAlive(commands.Cog):
 
         target = self.bot.get_channel(self.target_channel_id)
         if target is None:
-        self.target_channel_id = 1528448911478620334
+            self.target_channel_id = 1528448911478620334
             return
 
         for guild in self.bot.guilds:
