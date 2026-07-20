@@ -285,6 +285,76 @@ class OSINT(commands.Cog):
         embed.set_footer(text="Bu komut sinirli subdomain listesi ile calisir.")
         await ctx.send(embed=embed)
 
+    @commands.command(name="telefonbilgi", aliases=["phonebilgi", "telefon", "numarabilgi"])
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    async def telefonbilgi(self, ctx, *, numara: str):
+        await ctx.defer()
+
+        numara_temiz = re.sub(r'[^0-9+]', '', numara)
+
+        embed = discord.Embed(
+            title=f"Telefon Analizi: {numara}",
+            color=discord.Color.orange(),
+        )
+
+        try:
+            if numara_temiz.startswith("+"):
+                ulke_kodlari = {
+                    "+1": "ABD/Kanada", "+44": "Ingiltere", "+49": "Almanya",
+                    "+33": "Fransa", "+39": "Italya", "+34": "Ispanya",
+                    "+90": "Turkiye", "+966": "Suudi Arabistan", "+971": "BAE",
+                    "+7": "Rusya", "+86": "Cin", "+81": "Japonya",
+                    "+82": "Guney Kore", "+91": "Hindistan", "+61": "Avustralya",
+                    "+55": "Brezilya", "+52": "Meksika", "+27": "Guney Afrika",
+                    "+31": "Hollanda", "+46": "Isvec", "+47": "Norvec",
+                    "+48": "Polonya", "+358": "Finlandiya", "+45": "Danimarka",
+                    "+353": "Irlanda", "+351": "Portekiz", "+30": "Yunanistan",
+                    "+43": "Avusturya", "+41": "Isvicre", "+32": "Belcika",
+                }
+
+                for kod, ulke in ulke_kodlari.items():
+                    if numara_temiz.startswith(kod):
+                        embed.add_field(name="Ulke", value=ulke, inline=True)
+                        embed.add_field(name="Ulke Kodu", value=kod, inline=True)
+                        break
+                else:
+                    embed.add_field(name="Ulke Kodu", value=numara_temiz[:4], inline=True)
+            else:
+                embed.add_field(name="Tur", value="Yerel numara", inline=True)
+
+            uzunluk = len(numara_temiz)
+            embed.add_field(name="Numara Uzunlugu", value=str(uzunluk), inline=True)
+
+            if numara_temiz.startswith("+90") or numara_temiz.startswith("0"):
+                embed.add_field(name="Ulke", value="Turkiye", inline=True)
+
+                temiz_num = numara_temiz.lstrip("+90").lstrip("0")
+                if len(temiz_num) >= 4:
+                    operator_kodlari = {
+                        "53": "Turkcell", "54": "Turkcell", "50": "Vodafone",
+                        "55": "Turkcell", "51": "Vodafone", "52": "Vodafone",
+                    }
+                    ilk_iki = temiz_num[:2]
+                    if ilk_iki in operator_kodlari:
+                        embed.add_field(name="Operator", value=operator_kodlari[ilk_iki], inline=True)
+
+            embed.add_field(
+                name="Numara Formatlari",
+                value=(
+                    f"```\n"
+                    f"Ham: {numara_temiz}\n"
+                    f"Uluslararasi: {numara}\n"
+                    f"```\n"
+                ),
+                inline=False,
+            )
+
+        except Exception as e:
+            embed.add_field(name="Hata", value=str(e), inline=False)
+
+        embed.set_footer(text="Bu analiz sadece temel bilgiler verir, kesin dogru olmayabilir.")
+        await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(OSINT(bot))
