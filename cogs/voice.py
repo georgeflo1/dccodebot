@@ -16,22 +16,23 @@ class VoiceKeepAlive(commands.Cog):
         if self.target_channel_id is None:
             return
 
+        target = self.bot.get_channel(self.target_channel_id)
+        if target is None:
+            self.target_channel_id = None
+            return
+
         for guild in self.bot.guilds:
             vc = guild.voice_client
             if vc is None:
-                channel = self.bot.get_channel(self.target_channel_id)
-                if channel:
-                    try:
-                        await channel.connect()
-                    except Exception:
-                        pass
+                try:
+                    await target.connect()
+                except Exception:
+                    pass
             elif vc.channel is None or vc.channel.id != self.target_channel_id:
-                channel = self.bot.get_channel(self.target_channel_id)
-                if channel:
-                    try:
-                        await vc.move_to(channel)
-                    except Exception:
-                        pass
+                try:
+                    await vc.move_to(target)
+                except Exception:
+                    pass
 
     @auto_reconnect.before_loop
     async def before_auto_reconnect(self):
