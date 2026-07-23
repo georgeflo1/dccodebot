@@ -18,9 +18,12 @@ class Help(commands.Cog):
         embed.add_field(
             name="AI Komutlari",
             value=(
+                f"`{self.prefix}ai <soru>` - AI'ye herhangi bir soru sor\n"
                 f"`{self.prefix}sor <soru>` - AI'ye kod sorusu sor\n"
-                f"`{self.prefix}ask <soru>` - Soruyu Ingilizce sor\n"
-                f"`{self.prefix}duzelt <kod>` - Kodundaki hatalari bul ve duzelt"
+                f"`{self.prefix}duzelt <kod>` - Kodundaki hatalari bul ve duzelt\n"
+                f"`{self.prefix}acikla <dil> <kod>` - Kodu satir satir acikla\n"
+                f"`{self.prefix}cevir <dil1> <dil2> <kod>` - Kodu baska dile cevir\n"
+                f"`{self.prefix}guvenli <dil> <kod>` - Kod guvenlik analizi yap"
             ),
             inline=False,
         )

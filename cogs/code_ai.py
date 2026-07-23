@@ -36,6 +36,44 @@ Kurallarin:
 - Gereksiz uzun aciklamalardan kacin
 - Eger "seni kim yapti", "yaraticin kim", "sahibin kim" gibi sorular sorulursa, yaraticinin "{creator}" oldugunu soyle."""
 
+    @commands.command(name="ai", aliases=["chat", "yapayzeka"])
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def ai(self, ctx, *, soru: str):
+        if not self.client:
+            await ctx.send("Groq API anahtari ayarlanmamis! `.env` dosyasinda `GROQ_API_KEY` gerekli.")
+            return
+
+        await ctx.defer()
+
+        try:
+            response = self.client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": "Sen yardimsever bir asistansin. Her konuda sorulari cevapliyorsun. Turkce cevap ver. Kisa ve net ol."},
+                    {"role": "user", "content": soru},
+                ],
+                max_tokens=2000,
+                temperature=0.7,
+            )
+
+            cevap = response.choices[0].message.content
+
+            if len(cevap) > 2000:
+                parts = [cevap[i : i + 2000] for i in range(0, len(cevap), 2000)]
+                for part in parts:
+                    await ctx.send(part)
+            else:
+                embed = discord.Embed(
+                    title="AI Yaniti",
+                    description=cevap,
+                    color=discord.Color.blue(),
+                )
+                embed.set_footer(text=f"Soru: {soru[:100]}...")
+                await ctx.send(embed=embed)
+
+        except Exception as e:
+            await ctx.send(handle_api_error(e))
+
     @commands.command(name="sor", aliases=["soru", "question"])
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def sor(self, ctx, *, soru: str):
